@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.react.reactboard.board.mapper.BoardMapper">
+
+    <!-- 게시판 조회 -->
+    <select id="selectBoardList" parameterType="com.react.reactboard.board.vo.BoardVO" resultType="com.react.reactboard.board.vo.BoardVO">
+        SELECT BOARD_NO
+             , BOARD_TYPE
+             , TITLE
+             , CONTENTS
+             , USER_ID
+             , DATE_FORMAT(CREATED_TIME, '%Y-%m-%d') CREATED_TIME
+             , DATE_FORMAT(UPDATED_TIME, '%Y-%m-%d') UPDATED_TIME
+             , LIKES
+             , COUNTS
+        FROM board
+    </select>
+
+    <!-- 게시글 작성 -->
+    <insert id="insertBoard" parameterType="com.react.reactboard.board.vo.BoardVO">
+        INSERT INTO BOARD
+        (
+          BOARD_TYPE
+        , TITLE
+        , CONTENTS
+        , USER_ID
+        , CREATED_TIME
+        , UPDATED_TIME
+        , LIKES
+        , COUNTS)
+        VALUES(
+                    #{boardType}
+                   ,#{title}
+                   ,#{contents}
+                   ,#{userId}
+                   ,NOW()
+                   ,NOW()
+                   ,0
+                   ,0)
+
+    </insert>
+
+    <!-- 게시판 상세조회 -->
+    <select id="getBoard" parameterType="int" resultType="com.react.reactboard.board.vo.BoardVO">
+        SELECT BOARD_NO
+             , BOARD_TYPE
+             , TITLE
+             , CONTENTS
+             , USER_ID
+             , DATE_FORMAT(CREATED_TIME, '%Y-%m-%d') CREATED_TIME
+             , DATE_FORMAT(UPDATED_TIME, '%Y-%m-%d') UPDATED_TIME
+             , LIKES
+             , COUNTS
+        FROM board
+       WHERE BOARD_NO = #{boardNo}
+    </select>
+
+    <update id="updateBoard" parameterType="com.react.reactboard.board.vo.BoardVO">
+        update board set
+            BOARD_TYPE = #{boardType}
+                       , TITLE = #{title}
+                       , CONTENTS = #{contents}
+                       , USER_ID = #{userId}
+        where BOARD_NO = #{boardNo}
+    </update>
+
+    <update id="deleteBoard" parameterType="int">
+        delete
+          from board
+         where BOARD_NO = #{boardNo}
+    </update>
+</mapper>
